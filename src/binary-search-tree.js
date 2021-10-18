@@ -21,7 +21,6 @@ module.exports = class BinarySearchTree {
   add(data, node=this.Root) {
     //throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-	console.log(data);
 	function addData(data, node){
 		if(isNaN(node.data)){
 			node.data = data;
@@ -93,50 +92,78 @@ module.exports = class BinarySearchTree {
 	return find(data, this.Root);
   }
 
-  remove(/*data*/) {
-    throw new NotImplementedError('Not implemented');
+  remove(data) {
+    //throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
-	function find(data, node, Root=null){
-		if (data == node.data){
-			remove(node, Root);
-		} else if (data > node.data){
-			if (node.right != null){
-				return find(data, node.right, node);
+	function remove(data, Root){
+		let currentNode = Root;
+		let parentNode = Root;
+		let isLeftChild = true;
+		if (currentNode.data == undefined){
+			return false;
+		} else if (Root.data == data && Root.right == null && Root.left == null){
+			Root.data = null;
+			return true;
+		}
+		while (currentNode != null){
+			if (currentNode.data == data){
+				if (currentNode.right == null && currentNode.left == null){
+					//console.log('On the right way');
+					//console.log('isLeftChild: ' + isLeftChild);
+					if (isLeftChild){
+						/*console.log('On the right way');
+						console.log(parentNode);
+						console.log(parentNode.left);*/
+						parentNode.left = null;
+					} else {
+						parentNode.right = null;
+					}
+					return true;
+				} else if (currentNode.right == null){
+					currentNode.data = currentNode.left.data;
+					currentNode.right = currentNode.left.right;
+					currentNode.left = currentNode.left.left;
+					return true;
+				} else if (currentNode.left == null){
+					currentNode.data = currentNode.right.data;
+					currentNode.left = currentNode.right.left;
+					currentNode.right = currentNode.right.right;
+					return true;
+				} else {
+					if (currentNode.right.left == null && currentNode.right.right == null){
+						currentNode.data = currentNode.right.data;
+						currentNode.right = null;
+						return true;
+					} else if (currentNode.right.left == null && currentNode.right.right != null){
+						currentNode.data = currentNode.right.data;
+						currentNode.right = currentNode.right.right;
+						return true;
+					}
+					const MinNode = min(currentNode.right);
+					currentNode.data = MinNode.data;
+				}
 			}
-		} else if (data < node.data){
-			if (node.left != null){
-				return find(data, node.left, node);
+			parentNode = currentNode;
+			if (data > currentNode.data){
+				currentNode = currentNode.right;
+				isLeftChild = false;
+			} else  {
+				currentNode = currentNode.left;
+				isLeftChild = true;
 			}
 		}
 	}
-	function remove(node, Root){
-		if (node.right == null && node.left == null){
-			Root = null;
-		} else if (node == this.Root){
-			this.Root.data == null;
-			this.Root.right == null;
-			this.Root.left == null;
-		} else if (node.right == null){
-			Root = node.left;
-		} else if (node.left == null){
-			Root = node.right;
-		} else {
-			DeleteNode = node;
-			node = min(DeleteNode.right);
-			node.right = DeleteNode.right;
-			node.left = DeleteNode.left;
-			DeleteNode.right = null;
-			DeleteNode.left = null;
+	remove(data, this.Root);
+	function min(node){
+		let currentNode = node;
+		let parentNode = node;
+		while (currentNode.left != null){
+			parentNode = currentNode;
+			currentNode = currentNode.left;
 		}
-		function min(node){
-			if (node.left == null){
-				return node;
-			} else {
-				return min(node.left);
-			}
-		}
+		parentNode.left = currentNode.right;
+		return currentNode;
 	}
-	find(data, this.Root);
   }
 
   min(node=this.Root) {
@@ -152,9 +179,17 @@ module.exports = class BinarySearchTree {
 	return min(node);
   }
 
-  max() {
-    throw new NotImplementedError('Not implemented');
+  max(node=this.Root) {
+    //throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
+		function max(node){
+		if (node.right == null){
+			return node.data;
+		} else {
+			return max(node.right);
+		}
+	}
+	return max(node);
   }
 
 }
